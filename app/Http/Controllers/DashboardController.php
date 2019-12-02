@@ -27,7 +27,7 @@ class DashboardController extends Controller
 
         // Build texts
         $responseTimeTexts = $checkResponses->map(function ($check) {
-            return $check->website->name . ' ' . $check->created_at->format('H:i');
+            return $check->website->name . ' ' . $check->created_at->format('g:ia');
         })->reverse()->values();
 
         return view('dashboard.index', compact(

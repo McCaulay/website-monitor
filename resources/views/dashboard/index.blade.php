@@ -139,7 +139,10 @@ $(function() {
                     display: false,
                 }],
                 yAxes: [{
-                    display: false
+                    display: false,
+                    ticks: {
+                        beginAtZero: true
+                    },
                 }]
             },
             legend: {
