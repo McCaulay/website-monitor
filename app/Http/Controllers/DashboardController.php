@@ -13,6 +13,16 @@ class DashboardController extends Controller
      */
     public function index()
     {
+        return view('dashboard.index', $this->data());
+    }
+
+    /**
+     * Get the application data.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function data()
+    {
         $websites = Auth::user()->websites;
         $averageResponseTime = $this->getAverageResponseTimeToday();
         $checkCount = $this->getChecksCountToday();
@@ -30,13 +40,13 @@ class DashboardController extends Controller
             return $check->website->name . ' ' . $check->created_at->format('g:ia');
         })->reverse()->values();
 
-        return view('dashboard.index', compact(
-            'websites',
-            'averageResponseTime',
-            'checkCount',
-            'responseTimes',
-            'responseTimeTexts'
-        ));
+        return [
+            'websites' => $websites,
+            'averageResponseTime' => $averageResponseTime,
+            'checkCount' => $checkCount,
+            'responseTimes' => $responseTimes,
+            'responseTimeTexts' => $responseTimeTexts,
+        ];
     }
 
     /**

@@ -18,5 +18,6 @@ Route::get('/', function () {
 Auth::routes( /*['register' => false]*/);
 
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
+    Route::get('dashboard', 'DashboardController@index')->name('dashboard');
+    Route::get('dashboard/data', 'DashboardController@data')->name('dashboard.data');
 });

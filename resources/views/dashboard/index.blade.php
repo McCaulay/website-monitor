@@ -25,19 +25,19 @@ Dashboard
             <div class="card d-flex w-100 mb-4">
                 <div class="row no-gutters row-bordered h-100">
                     @component('components.stat-block', ['icon' => 'license', 'small' => 'Currently active'])
-                        <span class="font-weight-bolder">{{ $websites->count() }}</span> Website{{ $websites->count() != 1 ? 's' : '' }}
+                        <span id="website-count"><span class="font-weight-bolder">{{ $websites->count() }}</span> Website{{ $websites->count() != 1 ? 's' : '' }}</span>
                     @endcomponent
 
                     @component('components.stat-block', ['icon' => 'hourglass', 'small' => 'Averge today'])
-                        <span class="font-weight-bolder">{{ $averageResponseTime }}ms</span> Response Time
+                        <span id="average-response-time"><span class="font-weight-bolder">{{ $averageResponseTime }}ms</span> Response Time</span>
                     @endcomponent
 
                     @component('components.stat-block', ['icon' => 'checkmark-circle', 'small' => 'Completed today'])
-                        <span class="font-weight-bolder">{{ $checkCount }}</span> Checks
+                        <span id="check-count"><span class="font-weight-bolder">{{ $checkCount }}</span> Checks</span>
                     @endcomponent
                     
                     @component('components.stat-block', ['icon' => 'alarm', 'small' => 'Notifications this month'])
-                        <span class="font-weight-bolder">0</span>
+                        <span id="notification-count"><span class="font-weight-bolder">0</span></span>
                     @endcomponent
 
                 </div>
@@ -121,6 +121,7 @@ Dashboard
 
 <script>
 $(function() {
+
     var responseTimes = {!! json_encode($responseTimes) !!};
     var responseTimeTexts = {!! json_encode($responseTimeTexts) !!};
     var chart1 = new Chart(document.getElementById('statistics-chart-1').getContext("2d"), {
@@ -152,6 +153,24 @@ $(function() {
             maintainAspectRatio: false
         }
     });
+
+    function loadData() {
+        $.get('/dashboard/data', function(response) {
+            $('#website-count').html('<span class="font-weight-bolder">' + response.websites.length + '</span> Website' + (response.websites.length != 1 ? 's' : ''));
+            $('#average-response-time').html('<span class="font-weight-bolder">' + response.averageResponseTime + 'ms</span> Response Time');
+            $('#check-count').html('<span class="font-weight-bolder">' + response.checkCount + '</span> Checks');
+
+            chart1.data.datasets = [{
+                data: response.responseTimes,
+                borderWidth: 0,
+                backgroundColor: 'rgba(87, 181, 255, 1)',
+            }];
+            chart1.data.labels = response.responseTimeTexts;
+            chart1.update();
+        });
+    }
+
+    setInterval(loadData, 30000);
 
     // Resizing charts
     function resizeCharts() {
