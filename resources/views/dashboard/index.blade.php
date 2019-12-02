@@ -76,18 +76,34 @@ Dashboard
                         <a href="javascript:void(0)" class="text-body font-weight-semibold">{{ $website->name }}</a><br>
                         <a href="{{ $website->url }}" target="_blank"><small class="text-muted">{{ $website->url }}</small></a>
                     </div>
-                    <div class="col-4 col-md-2 text-muted small px-4 pt-4">
-                        <span class="badge badge-success">Active</span>
-                    </div>
-                    <div class="col-4 col-md-2 text-muted small px-4 pt-4">
-                        12 Jan 2018 <br> 4:45
-                    </div>
-                    <div class="col-4 col-md-3 px-4 pt-4">
-                        <div class="text-right text-muted small">60%</div>
-                        <div class="progress" style="height: 6px;">
-                            <div class="progress-bar" style="width: 60%;"></div>
+                    @if ($website->lastCheck() != null)
+                        <div class="col-4 col-md-2 text-muted small px-4 pt-4">
+                            <span class="badge badge-success">Active</span>
                         </div>
-                    </div>
+                        <div class="col-4 col-md-2 text-muted small px-4 pt-4">
+                            {{ $website->lastCheck()->created_at->format('j M Y') }}
+                            <br>
+                            {{ $website->lastCheck()->created_at->format('G:i') }}
+                        </div>
+                        <div class="col-4 col-md-3 px-4 pt-4">
+                            <div class="text-right text-muted small">{{ $website->lastCheck()->percentage }}%</div>
+                            <div class="progress" style="height: 6px;">
+                                <div
+                                    class="
+                                        progress-bar
+                                        @if ($website->lastCheck()->percentage > 70)
+                                            bg-success
+                                        @elseif ($website->lastCheck()->percentage > 40)
+                                            bg-warning
+                                        @else
+                                            bg-danger
+                                        @endif
+                                    " 
+                                    style="width: {{ $website->lastCheck()->percentage }}%;"
+                                ></div>
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
         @endforeach

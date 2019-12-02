@@ -50,4 +50,12 @@ class Website extends Model
     {
         return $this->hasMany('App\Models\Check');
     }
+
+    /**
+     * Get the latest website check.
+     */
+    public function lastCheck()
+    {
+        return $this->checks()->latest()->first();
+    }
 }
