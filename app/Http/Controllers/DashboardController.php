@@ -1,6 +1,8 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\Website;
+
 class DashboardController extends Controller
 {
     /**
@@ -10,6 +12,7 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        return view('dashboard.index');
+        $websites = Website::get();
+        return view('dashboard.index', compact('websites'));
     }
 }
