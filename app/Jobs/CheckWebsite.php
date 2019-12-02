@@ -39,23 +39,41 @@ class CheckWebsite implements ShouldQueue
     {
         // Guzzle
         $client = new \GuzzleHttp\Client();
-        $response = $client->request('GET', $this->website->url, [
-            'on_stats' => function (TransferStats $stats) {
-                // Record the website check
-                $this->website->createCheck(
-                    $stats->getHandlerStat('http_code'), // HTTP Code (eg 404)
-                    $stats->getTransferTime() * 1000// Total time in ms
-                    // $stats->getHandlerStat('namelookup_time') * 1000, // DNS Lookup time in ms
-                    // $stats->getHandlerStat('connect_time') * 1000, // Connect time in ms
-                    // $stats->getHandlerStat('pretransfer_time') * 1000, // Pretransfer time in ms
-                    // $stats->getHandlerStat('redirect_time') * 1000, // Redirect time in ms
-                    // $stats->getHandlerStat('starttransfer_time') * 1000, // Start transfer time in ms
-                    // $stats->getHandlerStat('appconnect_time') * 1000, // APP connect time in ms
-                    // $stats->getHandlerStat('size_download'), // Download size
-                    // $stats->getHandlerStat('speed_download'), // Download speed
-                );
+        try {
+            $response = $client->request('GET', $this->website->url, [
+                'timeout' => $this->website->timeout,
+                'on_stats' => function (TransferStats $stats) {
+                    // Record the website check
+                    $this->website->createCheck(
+                        $stats->getHandlerStat('http_code'), // HTTP Code (eg 404)
+                        $stats->getTransferTime() * 1000// Total time in ms
+                        // $stats->getHandlerStat('namelookup_time') * 1000, // DNS Lookup time in ms
+                        // $stats->getHandlerStat('connect_time') * 1000, // Connect time in ms
+                        // $stats->getHandlerStat('pretransfer_time') * 1000, // Pretransfer time in ms
+                        // $stats->getHandlerStat('redirect_time') * 1000, // Redirect time in ms
+                        // $stats->getHandlerStat('starttransfer_time') * 1000, // Start transfer time in ms
+                        // $stats->getHandlerStat('size_download'), // Download size
+                        // $stats->getHandlerStat('speed_download'), // Download speed
+                    );
 
-            },
-        ]);
+                },
+            ]);
+        } catch (\GuzzleHttp\Exception\RequestException $exception) {
+            // Timed out
+            $context = $exception->getHandlerContext();
+
+            // Record the website check
+            $this->website->createCheck(
+                503, // Request timed out
+                $context['total_time'] * 1000// Total time in ms
+                // $context['namelookup_time'] * 1000, // DNS Lookup time in ms
+                // $context['connect_time'] * 1000, // Connect time in ms
+                // $context['pretransfer_time'] * 1000, // Pretransfer time in ms
+                // $context['redirect_time'] * 1000, // Redirect time in ms
+                // $context['starttransfer_time'] * 1000, // Start transfer time in ms
+                // $context['size_download'], // Download size
+                // $context['speed_download'], // Download speed
+            );
+        }
     }
 }

@@ -46,14 +46,14 @@ class DashboardController extends Controller
      */
     private function getAverageResponseTimeToday(): float
     {
-        return Auth::user()->websites->map(function ($website) {
+        return round(Auth::user()->websites->map(function ($website) {
             return $website->checks()
                 ->whereDate('created_at', now())
                 ->get()
                 ->map(function ($check) {
                     return $check->load_time;
                 });
-        })->flatten()->avg();
+        })->flatten()->avg(), 2);
     }
 
     /**
