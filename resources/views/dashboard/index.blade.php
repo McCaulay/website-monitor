@@ -29,15 +29,15 @@ Dashboard
                     @endcomponent
 
                     @component('components.stat-block', ['icon' => 'hourglass', 'small' => 'Averge today'])
-                        <span class="font-weight-bolder">152ms</span> Response Time
+                        <span class="font-weight-bolder">{{ Auth::user()->getAverageResponseTimeToday() }}ms</span> Response Time
                     @endcomponent
 
                     @component('components.stat-block', ['icon' => 'checkmark-circle', 'small' => 'Completed today'])
-                        <span class="font-weight-bolder">54</span> Checks
+                        <span class="font-weight-bolder">{{ Auth::user()->getChecksCountToday() }}</span> Checks
                     @endcomponent
                     
                     @component('components.stat-block', ['icon' => 'alarm', 'small' => 'Notifications this month'])
-                        <span class="font-weight-bolder">42</span>
+                        <span class="font-weight-bolder">0</span>
                     @endcomponent
 
                 </div>
