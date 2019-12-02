@@ -36,35 +36,6 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the average website response time today.
-     *
-     * @return float
-     */
-    public function getAverageResponseTimeToday(): float
-    {
-        return $this->websites->map(function ($website) {
-            return $website->checks()
-                ->whereDate('created_at', now())
-                ->get()
-                ->map(function ($check) {
-                    return $check->load_time;
-                });
-        })->flatten()->avg();
-    }
-
-    /**
-     * Get the number of website checks ran today.
-     *
-     * @return int
-     */
-    public function getChecksCountToday(): int
-    {
-        return $this->websites->reduce(function ($carry, $website) {
-            return $carry + $website->checks()->whereDate('created_at', now())->count();
-        });
-    }
-
-    /**
      * Get the websites the user owns.
      */
     public function websites()

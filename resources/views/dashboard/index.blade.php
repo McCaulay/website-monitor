@@ -29,11 +29,11 @@ Dashboard
                     @endcomponent
 
                     @component('components.stat-block', ['icon' => 'hourglass', 'small' => 'Averge today'])
-                        <span class="font-weight-bolder">{{ Auth::user()->getAverageResponseTimeToday() }}ms</span> Response Time
+                        <span class="font-weight-bolder">{{ $averageResponseTime }}ms</span> Response Time
                     @endcomponent
 
                     @component('components.stat-block', ['icon' => 'checkmark-circle', 'small' => 'Completed today'])
-                        <span class="font-weight-bolder">{{ Auth::user()->getChecksCountToday() }}</span> Checks
+                        <span class="font-weight-bolder">{{ $checkCount }}</span> Checks
                     @endcomponent
                     
                     @component('components.stat-block', ['icon' => 'alarm', 'small' => 'Notifications this month'])
@@ -110,3 +110,52 @@ Dashboard
         <!-- / Websites -->
     @endif
 @endsection
+
+@push('scripts')
+<!-- Dependencies -->
+<script src="{{ mix('/vendor/libs/chartjs/chartjs.js') }}"></script>
+
+<script>
+$(function() {
+    var responseTimes = {!! json_encode($responseTimes) !!};
+    var responseTimeTexts = {!! json_encode($responseTimeTexts) !!};
+    var chart1 = new Chart(document.getElementById('statistics-chart-1').getContext("2d"), {
+        type: 'bar',
+        data: {
+            datasets: [{
+                data: responseTimes,
+                borderWidth: 0,
+                backgroundColor: 'rgba(87, 181, 255, 1)',
+            }],
+            labels: responseTimeTexts
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                    display: false,
+                }],
+                yAxes: [{
+                    display: false
+                }]
+            },
+            legend: {
+                display: false
+            },
+            responsive: false,
+            maintainAspectRatio: false
+        }
+    });
+
+    // Resizing charts
+    function resizeCharts() {
+        chart1.resize();
+    }
+
+    // Initial resize
+    resizeCharts();
+
+    // For performance reasons resize charts on delayed resize event
+    window.layoutHelpers.on('resize.dashboard-2', resizeCharts);
+});
+</script>
+@endpush
