@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Models\Website;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -12,7 +12,7 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $websites = Website::get();
+        $websites = Auth::user()->websites;
         return view('dashboard.index', compact('websites'));
     }
 }
