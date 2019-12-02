@@ -1,6 +1,7 @@
 <?php
 namespace App\Models;
 
+use App\Models\Check;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
@@ -17,6 +18,21 @@ class Website extends Model
         return SlugOptions::create()
             ->generateSlugsFrom('name')
             ->saveSlugsTo('slug');
+    }
+
+    /**
+     * Create a check against the website.
+     *
+     * @param int $statusCode
+     * @param int $loadTime
+     * @return \App\Models\Check
+     */
+    public function createCheck(int $statusCode, int $loadTime): Check
+    {
+        return $this->checks()->create([
+            'status_code' => $statusCode,
+            'load_time' => $loadTime,
+        ]);
     }
 
     /**

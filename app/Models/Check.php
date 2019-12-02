@@ -6,6 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 class Check extends Model
 {
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['status_code', 'load_time'];
+
+    /**
      * Get the website the check is for.
      */
     public function website()
