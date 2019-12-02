@@ -18,4 +18,12 @@ class Website extends Model
             ->generateSlugsFrom('name')
             ->saveSlugsTo('slug');
     }
+
+    /**
+     * Get the websites checks.
+     */
+    public function checks()
+    {
+        return $this->hasMany('App\Models\Check');
+    }
 }
