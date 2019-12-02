@@ -78,7 +78,11 @@ Dashboard
                     </div>
                     @if ($website->lastCheck() != null)
                         <div class="col-4 col-md-2 text-muted small px-4 pt-4">
-                            <span class="badge badge-success">Active</span>
+                            @if ($website->lastCheck()->status_code == 200)
+                                <span class="badge badge-success">Active</span>
+                            @else
+                                <span class="badge badge-danger">Error</span>
+                            @endif
                         </div>
                         <div class="col-4 col-md-2 text-muted small px-4 pt-4">
                             {{ $website->lastCheck()->created_at->format('j M Y') }}
