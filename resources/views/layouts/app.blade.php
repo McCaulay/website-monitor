@@ -7,74 +7,96 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>@yield('title') | {{ config('app.name', 'Laravel') }}</title>
 
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
-
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    
     <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i,900" rel="stylesheet">
 
-    <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <!-- Icon fonts -->
+    <link rel="stylesheet" href="{{ mix('/vendor/fonts/fontawesome.css') }}">
+    <link rel="stylesheet" href="{{ mix('/vendor/fonts/ionicons.css') }}">
+    <link rel="stylesheet" href="{{ mix('/vendor/fonts/linearicons.css') }}">
+    <link rel="stylesheet" href="{{ mix('/vendor/fonts/open-iconic.css') }}">
+    <link rel="stylesheet" href="{{ mix('/vendor/fonts/pe-icon-7-stroke.css') }}">
+
+    <!-- Core stylesheets -->
+    <link rel="stylesheet" href="{{ mix('/vendor/css/rtl/bootstrap.css') }}" class="theme-settings-bootstrap-css">
+    <link rel="stylesheet" href="{{ mix('/vendor/css/rtl/appwork.css') }}" class="theme-settings-appwork-css">
+    <link rel="stylesheet" href="{{ mix('/vendor/css/rtl/theme-corporate.css') }}" class="theme-settings-theme-css">
+    <link rel="stylesheet" href="{{ mix('/vendor/css/rtl/colors.css') }}" class="theme-settings-colors-css">
+    <link rel="stylesheet" href="{{ mix('/vendor/css/rtl/uikit.css') }}">
+    <link rel="stylesheet" href="{{ mix('/css/app.css') }}">
+
+    <!-- Load polyfills -->
+    <script src="{{ mix('/vendor/js/polyfills.js') }}"></script>
+    <script>document['documentMode']===10&&document.write('<script src="https://polyfill.io/v3/polyfill.min.js?features=Intl.~locale.en"><\/script>')</script>
+
+    <script src="{{ mix('/vendor/js/material-ripple.js') }}"></script>
+    <script src="{{ mix('/vendor/js/layout-helpers.js') }}"></script>
+
+    <!-- Theme settings -->
+    <!-- This file MUST be included after core stylesheets and layout-helpers.js in the <head> section -->
+    <script src="{{ mix('/vendor/js/theme-settings.js') }}"></script>
+    <script>
+        window.themeSettings = new ThemeSettings({
+            cssPath: '',
+            themesPath: '',
+            pathResolver: function(path) {
+                var resolvedPaths = {
+                    // Core stylesheets
+                    //
+                    @foreach (['bootstrap', 'appwork', 'colors'] as $name)
+                    '{{ $name }}.css': '{{ mix("/vendor/css/rtl/{$name}.css") }}',
+                    '{{ $name }}-material.css': '{{ mix("/vendor/css/rtl/{$name}-material.css") }}',
+                    @endforeach
+
+                    // UI Kit
+                    'uikit.css': '{{ mix("/vendor/css/rtl/uikit.css") }}',
+
+                    // Themes
+                    //
+                    @foreach (['air', 'corporate', 'cotton', 'gradient', 'paper', 'shadow', 'soft', 'sunrise', 'twitlight', 'vibrant'] as $name)
+                    'theme-{{ $name }}.css': '{{ mix("/vendor/css/rtl/theme-{$name}.css") }}',
+                    'theme-{{ $name }}-material.css': '{{ mix("/vendor/css/rtl/theme-{$name}-material.css") }}',
+                    @endforeach
+                }
+
+                return resolvedPaths[path] || path;
+            }
+        });
+    </script>
+
+    <!-- Core scripts -->
+    <script src="{{ mix('/vendor/js/pace.js') }}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <!-- Libs -->
+    <link rel="stylesheet" href="{{ mix('/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}">
+
+    <style>
+    #theme-settings {
+        display: none;
+    }
+    </style>
+    
+    @stack('styles')
 </head>
 <body>
-    <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+    <div class="page-loader"><div class="bg-primary"></div></div>
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
+    @yield('layout-content')
 
-                    </ul>
+    <!-- Core scripts -->
+    <script src="{{ mix('/vendor/libs/popper/popper.js') }}"></script>
+    <script src="{{ mix('/vendor/js/bootstrap.js') }}"></script>
+    <script src="{{ mix('/vendor/js/sidenav.js') }}"></script>
 
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ml-auto">
-                        <!-- Authentication Links -->
-                        @guest
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                            </li>
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }} <span class="caret"></span>
-                                </a>
+    <!-- Scripts -->
+    <script src="{{ mix('/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
+    <script src="{{ mix('/js/app.js') }}"></script>
 
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @endguest
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
-        <main class="py-4">
-            @yield('content')
-        </main>
-    </div>
+    @stack('scripts')
 </body>
 </html>

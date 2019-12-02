@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -16,7 +15,7 @@ class ConfirmPasswordController extends Controller
     | uses a simple trait to include the behavior. You're free to explore
     | this trait and override any functions that require customization.
     |
-    */
+     */
 
     use ConfirmsPasswords;
 
@@ -25,7 +24,7 @@ class ConfirmPasswordController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/dashboard';
 
     /**
      * Create a new controller instance.
