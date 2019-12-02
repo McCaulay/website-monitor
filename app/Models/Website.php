@@ -20,6 +20,14 @@ class Website extends Model
     }
 
     /**
+     * Get the owner of the website.
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User');
+    }
+
+    /**
      * Get the websites checks.
      */
     public function checks()

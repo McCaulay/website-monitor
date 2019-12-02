@@ -34,4 +34,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Get the websites the user owns.
+     */
+    public function websites()
+    {
+        return $this->hasMany('App\Models\Website');
+    }
 }
