@@ -21,7 +21,7 @@
 
         <!-- Dashboard -->
         <li class="sidenav-item{{ $routeName == 'dashboard' ? ' active' : '' }}">
-            <a href="{{ route('dashboard') }}" class="sidenav-link"><i class="sidenav-icon ion ion-md-list"></i><div>Dashboard</div></a>
+            <a href="{{ route('dashboard') }}" class="sidenav-link"><i class="sidenav-icon ion ion-ios-stats"></i><div>Dashboard</div></a>
         </li>
 
     </ul>
