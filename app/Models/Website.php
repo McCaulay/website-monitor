@@ -29,10 +29,26 @@ class Website extends Model
      */
     public function createCheck(int $statusCode, int $loadTime): Check
     {
-        return $this->checks()->create([
+        $check = $this->checks()->create([
             'status_code' => $statusCode,
             'load_time' => $loadTime,
         ]);
+
+        // Send notifications if required
+        $check->notify();
+
+        return $check;
+    }
+
+    /**
+     * Scope a query to only include active websites.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('active', 1);
     }
 
     /**

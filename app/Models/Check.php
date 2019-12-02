@@ -40,6 +40,16 @@ class Check extends Model
     }
 
     /**
+     * Notify the owner if certain conditions are met.
+     *
+     * @return void
+     */
+    public function notify(): void
+    {
+        //
+    }
+
+    /**
      * Get the website the check is for.
      */
     public function website()
