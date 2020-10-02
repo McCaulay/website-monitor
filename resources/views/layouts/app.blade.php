@@ -76,9 +76,9 @@
     <link rel="stylesheet" href="{{ mix('/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}">
 
     <style>
-    #theme-settings {
-        display: none;
-    }
+        #theme-settings {
+            display: none;
+        }
     </style>
     
     @stack('styles')
